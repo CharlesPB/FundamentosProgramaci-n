@@ -1,0 +1,297 @@
+//  TareaIntegradora
+//
+//  Created by Carlos Pérez 2 on 06/11/16.
+//  Copyright © 2016 Carlos Pérez 2. All rights reserved.
+//
+//   Programa hecho por Carlos Alejandro Pérez Barrientos el domingo 6 de noviembre del 2016
+//
+//   El siguiente programa es la tarea integradora de la clase de Fundamentos de Programación;
+//   Es un programa que permite a dos personas jugar "Damas Inglesas", se mostrará un tablero con las fichas de los jugadores "O" y "X",
+//   y se alternará para que cada uno pueda mover una ficha, gana el jugador que tenga más fichas cuando se decida dejar de jugar o el que se haya
+//   comido todas las fichas del otro jugador.
+//
+//
+//
+
+#include <iostream>
+#include <cctype>
+using namespace std;
+
+//
+// Función donde se inicializan las fichas de cada jugador, aquí se meten los valores 'O' o 'X' a la matriz donde correspondan.
+//
+void vInicio(char cTablero[8][8]){
+    for(int iRen = 0; iRen < 8 ; iRen++){
+        for (int iCol = 0; iCol < 8 ; iCol++) {
+            if((iCol%2==0) && (iRen == 1)){
+                cTablero[iRen][iCol] = 'O';
+            }
+            if(((iCol%2!=0) && (iRen == 0)) || ((iCol%2!=0) && (iRen == 2))){
+                cTablero[iRen][iCol] = 'O';
+            }
+            
+            if((iCol%2!=0) && (iRen == 6)){
+                cTablero[iRen][iCol] = 'X';
+            }
+            if(((iCol%2==0) && (iRen == 5)) || ((iCol%2==0) && (iRen == 7))){
+                cTablero[iRen][iCol] = 'X';
+            }
+        }
+        
+    }
+}
+
+//
+// Función donde se imprime el tablero actualizado cada vez que se mande a llamar.
+//
+void vImprimirTablero(char cTablero[8][8]){
+    cout << "   1  2  3  4  5  6  7  8" << endl;
+    
+    for(int iRen = 0; iRen < 8 ; iRen++){
+        cout << iRen + 1 << " ";
+        
+        for (int iCol = 0; iCol < 8 ; iCol++) {
+            cout << "[" << cTablero[iRen][iCol] << "]";
+        }
+        
+        cout << endl;
+    }
+}
+
+//
+//  Función donde se realizan los cambios dentro de la matriz para los movimientos del jugador O, aquí se valida el movimiento,
+//  que no pase nada si está en la esquina y pide moverse fuera del tablero, se valida cuando una ficha se come a otra del otro jugador.
+//  Y en ese caso se actualiza además de la matriz la cantidad de fichas restantes del otro jugador.
+//
+void vMovimientoO(char cTablero[8][8], int iRenglon, int iColumna, char cDireccion, int &iFichasX){
+    int iCont=0;
+    if (cDireccion=='K') {
+        
+        if((cTablero[iRenglon+1][iColumna+1]=='X') && (cTablero[iRenglon+2][iColumna+2]==' ')){
+            cTablero[iRenglon][iColumna] = ' ';
+            cTablero[iRenglon+1][iColumna+1] = ' ';
+            cTablero[iRenglon+2][iColumna+2] = 'O';
+            iCont++;
+            iFichasX--;
+        }
+        
+        if((iColumna!=7) && (cTablero[iRenglon+1][iColumna+1]!='O') && (cTablero[iRenglon+1][iColumna+1]==' ') && (iCont==0)){
+            cTablero[iRenglon][iColumna] = ' ';
+            iRenglon++;
+            iColumna++;
+            cTablero[iRenglon][iColumna] = 'O';
+        }
+        
+        
+    }
+    
+    iCont=0;
+    if (cDireccion=='J') {
+        
+        if((cTablero[iRenglon+1][iColumna-1]=='X') && (cTablero[iRenglon+2][iColumna-2]==' ')){
+            cTablero[iRenglon][iColumna] = ' ';
+            cTablero[iRenglon+1][iColumna-1] = ' ';
+            cTablero[iRenglon+2][iColumna-2] = 'O';
+            iCont++;
+            iFichasX--;
+        }
+        if((iColumna!=0) && (cTablero[iRenglon+1][iColumna-1]!='O') && (cTablero[iRenglon+1][iColumna-1]==' ') && (iCont==0)){
+            cTablero[iRenglon][iColumna] = ' ';
+            iRenglon++;
+            iColumna--;
+            cTablero[iRenglon][iColumna] = 'O';
+        }
+        
+        
+    }
+    
+    
+}
+
+//
+//  Función donde se realizan los cambios dentro de la matriz para los movimientos del jugador X, aquí se valida el movimiento,
+//  que no pase nada si está en la esquina y pide moverse fuera del tablero, se valida cuando una ficha se come a otra del otro jugador.
+//  Y en ese caso se actualiza además de la matriz la cantidad de fichas restantes del otro jugador.
+//
+void vMovimientoX(char cTablero[8][8], int iRenglon, int iColumna, char cDireccion, int &iFichasO){
+    
+    int iCont=0;
+    if (cDireccion=='K') {
+        
+        if((cTablero[iRenglon-1][iColumna+1]=='O') && (cTablero[iRenglon-2][iColumna+2]==' ')){
+            cTablero[iRenglon][iColumna] = ' ';
+            cTablero[iRenglon-1][iColumna+1] = ' ';
+            cTablero[iRenglon-2][iColumna+2] = 'X';
+            iCont++;
+            iFichasO--;
+        }
+        if((iColumna!=7) && (cTablero[iRenglon-1][iColumna+1]!='X') && (cTablero[iRenglon-1][iColumna+1]==' ') && (iCont==0)){
+            cTablero[iRenglon][iColumna] = ' ';
+            iRenglon--;
+            iColumna++;
+            cTablero[iRenglon][iColumna] = 'X';
+        }
+        
+        
+    }
+    
+    
+    iCont=0;
+    if (cDireccion=='J') {
+        
+        if((cTablero[iRenglon-1][iColumna-1]=='O') && (cTablero[iRenglon-2][iColumna-2]==' ')){
+            cTablero[iRenglon][iColumna] = ' ';
+            cTablero[iRenglon-1][iColumna-1] = ' ';
+            cTablero[iRenglon-2][iColumna-2] = 'X';
+            iCont++;
+            iFichasO--;
+        }
+        if((iColumna!=0) && (cTablero[iRenglon-1][iColumna-1]!='X') && (cTablero[iRenglon-1][iColumna-1]==' ') && (iCont==0)){
+            cTablero[iRenglon][iColumna] = ' ';
+            iRenglon--;
+            iColumna--;
+            cTablero[iRenglon][iColumna] = 'X';
+        }
+        
+        
+    }
+    
+}
+
+
+int main() {
+    char cTablero[8][8], cDireccion, cEstatus;
+    int iRenglon, iColumna, iCont=0;
+    int iFichasO = 12, iFichasX = 12;
+    
+    
+    //
+    // Ciclo donde se crean los valores de la matriz, aquí se asignan los espacios en blanco y los signos de igual (=), que ocupan los espacios negros que no se deben de tocar.
+    //
+    for(int iRen = 0; iRen < 8 ; iRen++){
+        
+        for (int iCol = 0; iCol < 8 ; iCol++) {
+            
+            if((iCol%2==0) && (iRen%2 == 0)){
+                cTablero[iRen][iCol] = '=';
+            } else {
+                cTablero[iRen][iCol] = ' ';
+            }
+            
+            if((iCol%2 !=0) && (iRen%2 != 0)){
+                cTablero[iRen][iCol] = '=';
+            }
+        }
+        
+    }
+    
+    vInicio(cTablero);
+    
+    //
+    //  Ciclo principal donde el juego toma lugar, mientras haya fichas de ambos jugadores y se decida continuar jugando se repitirá el proceso.
+    //
+    do {
+        vImprimirTablero(cTablero);
+        
+        if(iCont !=0){
+            if((iFichasX==0)||(iFichasO==0)){
+                break;
+            }
+            
+            do {
+                cout << "Seguir jugando (s/n) --> " << endl;
+                cin >> cEstatus;
+                cEstatus = tolower(cEstatus);
+            } while ((cEstatus!= 's')&&(cEstatus!= 'n') );
+            if(cEstatus=='n'){
+                break;
+            }
+        }
+        
+        //
+        //  Se valida que haya una ficha del jugador O cuando se leen los datos del renglón y columna para el movimiento.
+        //
+        do {
+            cout << "Jugador O renglón --> " << endl;
+            cin >> iRenglon;
+            iRenglon--;
+            cout << "columna --> " << endl;
+            cin >> iColumna;
+            iColumna--;
+        } while (cTablero[iRenglon][iColumna] != 'O');
+        
+        
+        do {
+            cout << "Dirección (J - Izquierda, K - Derecha) -> ";
+            cin >> cDireccion;
+            cDireccion = toupper(cDireccion);
+        } while ((cDireccion!='J')&&(cDireccion!='K'));
+        
+        vMovimientoO(cTablero, iRenglon, iColumna, cDireccion, iFichasX);
+        
+        vImprimirTablero(cTablero);
+        
+        if((iFichasX==0)||(iFichasO==0)){
+            break;
+        }
+        do {
+            cout << "Seguir jugando (s/n) --> " << endl;
+            cin >> cEstatus;
+            cEstatus = tolower(cEstatus);
+        } while ((cEstatus!= 's')&&(cEstatus!= 'n') );
+      
+        
+        if(cEstatus=='n'){
+            break;
+        }
+        
+        //
+        //  Se valida que haya una ficha del jugador X cuando se leen los datos del renglón y columna para el movimiento.
+        //
+        do {
+            cout << "Jugador X renglón --> " << endl;
+            cin >> iRenglon;
+            iRenglon--;
+            cout << "columna --> " << endl;
+            cin >> iColumna;
+            iColumna--;
+        } while (cTablero[iRenglon][iColumna] != 'X');
+        
+        do {
+            cout << "Dirección (J - Izquierda, K - Derecha) -> ";
+            cin >> cDireccion;
+            cDireccion = toupper(cDireccion);
+        } while ((cDireccion!='J')&&(cDireccion!='K'));
+        
+        
+        vMovimientoX(cTablero, iRenglon, iColumna, cDireccion, iFichasO);
+        
+        if((iFichasX==0)||(iFichasO==0)){
+            break;
+        }
+        
+        iCont = 1;
+        
+    } while (cEstatus == 's');
+    
+    
+    //
+    //  Checando los valores de las fichas restantes se determina quién es el ganador y muestra el mensaje final.
+    //
+    if(iFichasX > iFichasO){
+        cout << "El ganador es el jugador X";
+    }
+    if(iFichasX < iFichasO){
+        cout << "El ganador es el jugador O";
+    }
+    cout << endl;
+    
+    if(iFichasO==iFichasX)
+        cout << "El juego termina en empate";
+    
+    cout << endl;
+    cout << "Fichas restantes del jugador O = " << iFichasO << endl;
+    cout << "Fichas restantes del jugador X = " << iFichasX << endl;
+    
+    return 0;
+}
